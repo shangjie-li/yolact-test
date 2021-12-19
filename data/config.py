@@ -1,4 +1,4 @@
-from backbone import ResNetBackbone
+from backbone import ResNetBackbone, VovNetBackbone
 from math import sqrt
 import torch
 
@@ -185,6 +185,20 @@ kitti_dataset = dataset_base.copy({
     'label_map': None
 })
 
+seumm_dataset = dataset_base.copy({
+    'name': 'SEUMM',
+    
+    'train_images': './data/seumm/images/',
+    'train_info':   './data/seumm/annotations/instances_train.json',
+    
+    'valid_images': './data/seumm/images/',
+    'valid_info':   './data/seumm/annotations/instances_val.json',
+
+    'has_gt': True,
+    
+    'class_names': ('pedestrian', 'cyclist', 'car', 'bus', 'truck', 'traffic_light', 'traffic_sign'),
+    'label_map': None
+})
 
 
 # ----------------------- TRANSFORMS ----------------------- #
@@ -196,7 +210,12 @@ resnet_transform = Config({
     'to_float': False,
 })
 
-
+vovnet_transform = Config({
+    'channel_order': 'RGB',
+    'normalize': True,
+    'subtract_means': False,
+    'to_float': False,
+})
 
 
 
@@ -224,10 +243,6 @@ resnet101_backbone = backbone_base.copy({
     'type': ResNetBackbone,
     'args': ([3, 4, 23, 3],),
     'transform': resnet_transform,
-
-    'selected_layers': list(range(2, 8)),
-    'pred_scales': [[1]]*6,
-    'pred_aspect_ratios': [ [[0.66685089, 1.7073535, 0.87508774, 1.16524493, 0.49059086]] ] * 6,
 })
 
 resnet50_backbone = resnet101_backbone.copy({
@@ -238,7 +253,13 @@ resnet50_backbone = resnet101_backbone.copy({
     'transform': resnet_transform,
 })
 
-
+vovnet27_slim_backbone = backbone_base.copy({
+    'name': 'VovNet27',
+    'path': None,
+    'type': VovNetBackbone,
+    'args': ([1, 1, 2, 2],),
+    'transform': vovnet_transform,
+})
 
 
 # ----------------------- MASK BRANCH TYPES ----------------------- #
@@ -647,14 +668,29 @@ yolact_resnet50_config = yolact_base_config.copy({
 
     'backbone': resnet50_backbone.copy({
         'selected_layers': list(range(1, 4)),
-        
-        'pred_scales': yolact_base_config.backbone.pred_scales,
-        'pred_aspect_ratios': yolact_base_config.backbone.pred_aspect_ratios,
         'use_pixel_scales': True,
         'preapply_sqrt': False,
         'use_square_anchors': True, # This is for backward compatability with a bug
+        
+        'pred_scales': yolact_base_config.backbone.pred_scales,
+        'pred_aspect_ratios': yolact_base_config.backbone.pred_aspect_ratios,
     }),
 })
+
+yolact_vovnet27_config = yolact_base_config.copy({
+    'name': 'yolact_vovnet27',
+
+    'backbone': vovnet27_slim_backbone.copy({
+        'selected_layers': list(range(1, 4)),
+        'use_pixel_scales': True,
+        'preapply_sqrt': False,
+        'use_square_anchors': True, # This is for backward compatability with a bug
+        
+        'pred_scales': yolact_base_config.backbone.pred_scales,
+        'pred_aspect_ratios': yolact_base_config.backbone.pred_aspect_ratios,
+    }),
+})
+
 
 # Default config
 cfg = yolact_base_config.copy()

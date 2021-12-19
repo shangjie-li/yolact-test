@@ -153,14 +153,148 @@ class ResNetBackbone(nn.Module):
         self._make_layer(block, conv_channels // block.expansion, blocks=depth, stride=downsample)
 
 
+class Channel_Attention(nn.Module):
+    def __init__(self, channel, r=16):
+        super(Channel_Attention, self).__init__()
+        
+        self._avg_pool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
+        self._fc = nn.Sequential(
+            nn.Conv2d(channel, channel // r, kernel_size=1, bias=False),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(channel // r, channel, kernel_size=1, bias=False),
+        )
+        self._sigmoid = nn.Sigmoid()
+        
+    def forward(self, x):
+        y = self._avg_pool(x)
+        y = self._fc(y)
+        y = self._sigmoid(y)
+        return x * y
+
+
+class Spatial_Attention(nn.Module):
+    def __init__(self, kernel_size=3):
+        super(Spatial_Attention, self).__init__()
+        
+        assert kernel_size % 2 == 1, 'kernel_size = {}'.format(kernel_size)
+        padding = (kernel_size - 1) // 2
+        
+        self._layer = nn.Sequential(
+            nn.Conv2d(1, 1, kernel_size=kernel_size, padding=padding),
+            nn.Sigmoid()
+        )
+        
+    def forward(self, x):
+        mask, _ = torch.max(x, dim=1, keepdim=True) # The dimension of x should be [batch, channel, h, w]
+        mask = self._layer(mask)
+        return x * mask
+
+
+def conv3x3BNReLU(in_channels, out_channels, stride, groups=1):
+    return nn.Sequential(
+        nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, groups=groups, bias=False),
+        nn.BatchNorm2d(out_channels),
+        nn.ReLU6(inplace=True),
+    )
+
+
+def conv1x1BNReLU(in_channels, out_channels):
+    return nn.Sequential(
+        nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1, bias=False),
+        nn.BatchNorm2d(out_channels),
+        nn.ReLU6(inplace=True),
+    )
+
+
+class OSA(nn.Module):
+    def __init__(self, in_channels, mid_channels, out_channels, num_block=3, reduction=16):
+        super(OSA, self).__init__()
+        
+        self._layers = nn.ModuleList()
+        self._layers.append(conv3x3BNReLU(in_channels, mid_channels, stride=1))
+        for idx in range(num_block - 1):
+            self._layers.append(conv3x3BNReLU(mid_channels, mid_channels, stride=1))
+            
+        self.conv1x1 = conv1x1BNReLU(in_channels + mid_channels * num_block, out_channels)
+        # self.ca_layer = Channel_Attention(out_channels, reduction)
+        # self.sa_layer = Spatial_Attention()
+        
+    def forward(self, x):
+        features = []
+        features.append(x)
+        for _layer in self._layers:
+            x = _layer(x)
+            features.append(x)
+        out = torch.cat(features, dim=1)
+        out = self.conv1x1(out)
+        # out = self.ca_layer(out)
+        # out = self.sa_layer(out)
+        return out
+
+
+class VovNetBackbone(nn.Module):
+    def __init__(self, layers, num_classes=3):
+        super(VovNetBackbone, self).__init__()
+        planes = [[128, 64, 128],
+                  [128, 80, 256],
+                  [256, 96, 384],
+                  [384, 112, 512]]
+        
+        self.channels = [128, 256, 384, 512]
+        self.groups = 1
+        
+        self.stage1 = nn.Sequential(
+            conv3x3BNReLU(3, 64, stride=2, groups=self.groups),
+            conv3x3BNReLU(64, 64, stride=1, groups=self.groups),
+            conv3x3BNReLU(64, 128, stride=1, groups=self.groups),
+        )
+        self.stage2 = self._make_layer(planes[0][0], planes[0][1], planes[0][2], layers[0])
+        self.stage3 = self._make_layer(planes[1][0], planes[1][1], planes[1][2], layers[1])
+        self.stage4 = self._make_layer(planes[2][0], planes[2][1], planes[2][2], layers[2])
+        self.stage5 = self._make_layer(planes[3][0], planes[3][1], planes[3][2], layers[3])
+        
+    def _make_layer(self, in_channels, mid_channels, out_channels, num_block):
+        layers = []
+        layers.append(nn.MaxPool2d(kernel_size=3, stride=2, padding=1))
+        for idx in range(num_block):
+            layers.append(OSA(in_channels, mid_channels, out_channels))
+            in_channels = out_channels
+        return nn.Sequential(*layers)
+        
+    def init_params(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight)
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.BatchNorm2d) or isinstance(m, nn.Linear):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+                
+    def forward(self, x):
+        x = self.stage1(x)
+        outs = []
+        x = self.stage2(x)
+        outs.append(x)
+        x = self.stage3(x)
+        outs.append(x)
+        x = self.stage4(x)
+        outs.append(x)
+        x = self.stage5(x)
+        outs.append(x)
+        
+        return outs
+
+
 def construct_backbone(cfg):
     """ Constructs a backbone given a backbone config object (see config.py). """
     backbone = cfg.type(*cfg.args)
 
-    # Add downsampling layers until we reach the number we need
-    num_layers = max(cfg.selected_layers) + 1
+    if cfg.name == 'ResNet101' or cfg.name == 'ResNet50':
+        # Add downsampling layers until we reach the number we need
+        num_layers = max(cfg.selected_layers) + 1
 
-    while len(backbone.layers) < num_layers:
-        backbone.add_layer()
+        while len(backbone.layers) < num_layers:
+            backbone.add_layer()
 
     return backbone
