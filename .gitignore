@@ -2,6 +2,7 @@ __pycache__
 data/__pycache__
 data/coco
 data/kitti
+data/seumm
 
 layers/__pycache__
 layers/functions/__pycache__
@@ -19,4 +20,6 @@ utils/__pycache__
 weights
 weights_bac
 results
+
+logs
 
