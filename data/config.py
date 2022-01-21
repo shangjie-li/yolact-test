@@ -185,14 +185,14 @@ kitti_dataset = dataset_base.copy({
     'label_map': None
 })
 
-seumm_dataset = dataset_base.copy({
-    'name': 'SEUMM',
+seumm_dual = dataset_base.copy({
+    'name': 'SEUMM Dual',
     
-    'train_images': './data/seumm/images/',
-    'train_info':   './data/seumm/annotations/instances_train.json',
+    'train_images': './data/seumm_dual/lwir/',
+    'train_info':   './data/seumm_dual/annotations/instances_train.json',
     
-    'valid_images': './data/seumm/images/',
-    'valid_info':   './data/seumm/annotations/instances_val.json',
+    'valid_images': './data/seumm_dual/lwir/',
+    'valid_info':   './data/seumm_dual/annotations/instances_val.json',
 
     'has_gt': True,
     

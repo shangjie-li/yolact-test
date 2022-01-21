@@ -108,7 +108,7 @@ def parse_args(argv=None):
                         help='A path to a video to evaluate on. Passing in a number will use that index webcam.')
     parser.add_argument('--video_multiframe', default=1, type=int,
                         help='The number of frames to evaluate in parallel to make videos play at higher fps.')
-    parser.add_argument('--score_threshold', default=0.10, type=float,
+    parser.add_argument('--score_threshold', default=0.05, type=float,
                         help='Detections with a score under this threshold will not be considered. This currently only works in display mode.')
     parser.add_argument('--dataset', default=None, type=str,
                         help='If specified, override the dataset specified in the config with this one (example: coco2017_dataset).')
