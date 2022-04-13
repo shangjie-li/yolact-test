@@ -69,7 +69,7 @@ parser.add_argument('--save_interval', default=10000, type=int,
                     help='The number of iterations between saving the model.')
 parser.add_argument('--validation_size', default=5000, type=int,
                     help='The number of images to use for validation.')
-parser.add_argument('--validation_epoch', default=2, type=int,
+parser.add_argument('--validation_epoch', default=5, type=int,
                     help='Output validation information every n iterations. If -1, do no validation.')
 parser.add_argument('--keep_latest', dest='keep_latest', action='store_true',
                     help='Only keep the latest checkpoint instead of each one.')
