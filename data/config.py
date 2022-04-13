@@ -155,7 +155,7 @@ coco2017_testdev_dataset = dataset_base.copy({
     'label_map': COCO_LABEL_MAP
 })
 
-kitti = dataset_base.copy({
+kitti_dataset = dataset_base.copy({
     'name': 'KITTI',
     
     'train_images': './data/kitti/images/',
@@ -170,7 +170,7 @@ kitti = dataset_base.copy({
     'label_map': None
 })
 
-seumm_hq = dataset_base.copy({
+seumm_hq_dataset = dataset_base.copy({
     'name': 'SEUMM HQ',
     
     'train_images': './data/seumm_hq/images/',

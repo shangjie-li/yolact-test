@@ -12,7 +12,7 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
  - Check the KITTI dataset
    ```
-   python dataset_player.py kitti
+   python dataset_player.py kitti_dataset
    ```
 
 ## Training
@@ -22,7 +22,7 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
  - Train on KITTI dataset
    ```
-   python train.py --config=yolact_resnet50_config --dataset=kitti
+   python train.py --config=yolact_resnet50_config --dataset=kitti_dataset
    ```
    
 ## Evaluation
@@ -33,8 +33,8 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
  - Evaluate on KITTI dataset (mAP: 22.08 for box & 20.77 for mask)
    ```
-   python eval.py --dataset=kitti --trained_model=weights/kitti/yolact_base_89_50000.pth
-   python eval.py --dataset=kitti --trained_model=weights/kitti/yolact_base_89_50000.pth --display
+   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_base_89_50000.pth
+   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_base_89_50000.pth --display
    ```
    
 ## Demo
@@ -44,7 +44,7 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
  - Run on the image with KITTI model
    ```
-   python eval.py --dataset=kitti --trained_model=weights/kitti/yolact_base_89_50000.pth --image=my_image.jpeg --score_threshold=0.5 --top_k=20
+   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_base_89_50000.pth --image=my_image.jpeg --score_threshold=0.5 --top_k=20
    ```
    
 
