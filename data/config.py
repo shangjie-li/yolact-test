@@ -155,21 +155,6 @@ coco2017_testdev_dataset = dataset_base.copy({
     'label_map': COCO_LABEL_MAP
 })
 
-coco2017_dataset_custom = dataset_base.copy({
-    'name': 'COCO 2017 Custom',
-    
-    'train_images': '/home/lishangjie/yolact/data/coco/images',
-    'train_info':   '/home/lishangjie/yolact/data/coco/annotations/instances_train2017.json',
-    
-    'valid_images': '/home/lishangjie/yolact/data/coco/images',
-    'valid_info':   '/home/lishangjie/yolact/data/coco/annotations/instances_val2017.json',
-    
-    'has_gt': True,
-    
-    'class_names': COCO_CLASSES,
-    'label_map': COCO_LABEL_MAP
-})
-
 kitti_dataset = dataset_base.copy({
     'name': 'KITTI',
     
@@ -185,18 +170,18 @@ kitti_dataset = dataset_base.copy({
     'label_map': None
 })
 
-seumm_dual = dataset_base.copy({
-    'name': 'SEUMM Dual',
+seumm_hq = dataset_base.copy({
+    'name': 'SEUMM HQ',
     
-    'train_images': './data/seumm_dual/lwir/',
-    'train_info':   './data/seumm_dual/annotations/instances_train.json',
+    'train_images': './data/seumm_hq/images/',
+    'train_info':   './data/seumm_hq/annotations/instances_train.json',
     
-    'valid_images': './data/seumm_dual/lwir/',
-    'valid_info':   './data/seumm_dual/annotations/instances_val.json',
+    'valid_images': './data/seumm_hq/images/',
+    'valid_info':   './data/seumm_hq/annotations/instances_val.json',
 
     'has_gt': True,
     
-    'class_names': ('pedestrian', 'cyclist', 'car', 'bus', 'truck', 'traffic_light', 'traffic_sign'),
+    'class_names': ('car', 'person'),
     'label_map': None
 })
 
@@ -625,7 +610,7 @@ yolact_base_config = coco_base_config.copy({
     
     # Training params
     'lr_steps': (280000, 600000, 700000, 750000),
-    'max_iter': 400000,
+    'max_iter': 800000,
     
     # Backbone Settings
     'backbone': resnet101_backbone.copy({
