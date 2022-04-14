@@ -10,7 +10,7 @@ except ImportError:
 from data import COCODetection, get_label_map, COLORS
 from data import cfg, set_cfg, set_dataset
 from yolact import Yolact
-from utils.augmentations import BaseTransform, FastBaseTransform, Resize
+from utils.augmentations import FastBaseTransform
 from utils.functions import MovingAverage, ProgressBar
 from layers.box_utils import jaccard, center_size, mask_iou
 from utils import timer

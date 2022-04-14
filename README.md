@@ -6,13 +6,20 @@ A test version of Yolact in PyTorch for instance segmentation
  - This repository references [dbolya](https://github.com/dbolya/yolact)'s work.
 
 ## Dataset
- - Check the COCO 2017 dataset
+ - Check COCO 2017 dataset
    ```
    python dataset_player.py
+   python dataset_player.py --training
    ```
- - Check the KITTI dataset
+ - Check KITTI dataset
    ```
-   python dataset_player.py kitti_dataset
+   python dataset_player.py --dataset=kitti_dataset
+   python dataset_player.py --dataset=kitti_dataset --training
+   ```
+ - Check SEUMM HQ dataset
+   ```
+   python dataset_player.py --dataset=seumm_hq_dataset
+   python dataset_player.py --dataset=seumm_hq_dataset --training
    ```
 
 ## Training
@@ -24,33 +31,46 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
    python train.py --config=yolact_resnet50_config --dataset=kitti_dataset
    ```
-   
+ - Train on SEUMM HQ dataset
+   ```
+   python train.py --config=yolact_resnet50_config --dataset=seumm_hq_dataset
+   ```
+
 ## Evaluation
- - Evaluate on COCO 2017 dataset (mAP: 20.13 for box & 19.77 for mask)
+ - Evaluate on COCO 2017 dataset
    ```
    python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth
    python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --display
    ```
- - Evaluate on KITTI dataset (mAP: 22.08 for box & 20.77 for mask)
+ - Evaluate on KITTI dataset
    ```
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --display
    ```
+ - Evaluate on SEUMM HQ dataset
+   ```
+   # NotImplementError
+   ```
  - The result should be
- 
-| Model           | Dataset | Iter | val mAP@.5(B) | val mAP@.5:.95(B) | val mAP@.5(M) | val mAP@.5:.95(M) |
-|:---------------:|:-------:|:----:|:-------------:|:-----------------:|:-------------:|:-----------------:|
-| yolact_resnet50 | COCO    | 380k | 46.56         | 27.35             | 42.75         | 25.78             |
-| yolact_resnet50 | KITTI   | 60k  | 44.67         | 24.23             | 39.55         | 22.34             |
+
+| Backbone | Dataset  | Iter | val mAP@.5 B | val mAP@.5:.95 B | val mAP@.5 M | val mAP@.5:.95 M |
+|:--------:|:--------:|:----:|:------------:|:----------------:|:------------:|:----------------:|
+| ResNet50 | COCO     | 380k | 46.56        | 27.35            | 42.75        | 25.78            |
+| ResNet50 | KITTI    | 60k  | 44.67        | 24.23            | 39.55        | 22.34            |
+| ResNet50 | SEUMM HQ | 60k  |              |                  |              |                  |
 
 ## Demo
- - Run on the image with COCO 2017 model
+ - Run on an image with COCO 2017 model
    ```
    python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --image=my_image.jpeg --score_threshold=0.5 --top_k=20
    ```
- - Run on the image with KITTI model
+ - Run on an image with KITTI model
    ```
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --image=my_image.jpeg --score_threshold=0.5 --top_k=20
+   ```
+ - Run on an image with SEUMM HQ model
+   ```
+   # NotImplementError
    ```
    
 

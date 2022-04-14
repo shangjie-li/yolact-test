@@ -524,44 +524,6 @@ class PhotometricDistort(object):
         im, masks, boxes, labels = distort(im, masks, boxes, labels)
         return self.rand_light_noise(im, masks, boxes, labels)
 
-class PrepareMasks(object):
-    """
-    Prepares the gt masks for use_gt_bboxes by cropping with the gt box
-    and downsampling the resulting mask to mask_size, mask_size. This
-    function doesn't do anything if cfg.use_gt_bboxes is False.
-    """
-
-    def __init__(self, mask_size, use_gt_bboxes):
-        self.mask_size = mask_size
-        self.use_gt_bboxes = use_gt_bboxes
-
-    def __call__(self, image, masks, boxes, labels=None):
-        if not self.use_gt_bboxes:
-            return image, masks, boxes, labels
-        
-        height, width, _ = image.shape
-
-        new_masks = np.zeros((masks.shape[0], self.mask_size ** 2))
-
-        for i in range(len(masks)):
-            x1, y1, x2, y2 = boxes[i, :]
-            x1 *= width
-            x2 *= width
-            y1 *= height
-            y2 *= height
-            x1, y1, x2, y2 = (int(x1), int(y1), int(x2), int(y2))
-
-            # +1 So that if y1=10.6 and y2=10.9 we still have a bounding box
-            cropped_mask = masks[i, y1:(y2+1), x1:(x2+1)]
-            scaled_mask = cv2.resize(cropped_mask, (self.mask_size, self.mask_size))
-
-            new_masks[i, :] = scaled_mask.reshape(1, -1)
-        
-        # Binarize
-        new_masks[new_masks >  0.5] = 1
-        new_masks[new_masks <= 0.5] = 0
-
-        return image, new_masks, boxes, labels
 
 class BackboneTransform(object):
     """
@@ -604,7 +566,7 @@ class BaseTransform(object):
     def __init__(self, mean=MEANS, std=STD):
         self.augment = Compose([
             ConvertFromInts(),
-            Resize(resize_gt=False),
+            Resize(resize_gt=False), # img and mask don't have the same shape which will be restored in eval.py
             BackboneTransform(cfg.backbone.transform, mean, std, 'BGR')
         ])
 
@@ -680,7 +642,6 @@ class SSDAugmentation(object):
             Resize(),
             enable_if(not cfg.preserve_aspect_ratio, Pad(cfg.max_size, cfg.max_size, mean)),
             ToPercentCoords(),
-            PrepareMasks(cfg.mask_size, cfg.use_gt_bboxes),
             BackboneTransform(cfg.backbone.transform, mean, std, 'BGR')
         ])
 

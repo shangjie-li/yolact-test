@@ -1,8 +1,4 @@
-import sys
-import numpy as np
 import matplotlib.pyplot as plt
-import torch
-import random
 
 try:
     import cv2
@@ -11,9 +7,27 @@ except ImportError:
     sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
     import cv2
 
+import argparse
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import torch
+import random
+
 from data import COCODetection
 from data import cfg, set_cfg, set_dataset, MEANS, STD
 from utils.augmentations import SSDAugmentation, BaseTransform
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description='Dataset Displayer')
+    parser.add_argument('--dataset', default=None, type=str,
+                        help='If specified, override the dataset specified in the config with this one (example: coco2017_dataset).')
+    parser.add_argument('--training', action='store_true',
+                        help='Whether or not to use training set.')
+
+    global args
+    args = parser.parse_args(argv)
 
 def create_random_color():
     r = random.randint(0, 255)
@@ -59,49 +73,42 @@ def draw_annotation(img, mask, box, classname, color, score=None):
     return img
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        if len(sys.argv) == 2:
-            # Usage: python dataset_player.py coco2017_dataset_custom
-            dataset_name = sys.argv[1]
-            set_dataset(dataset_name)
-            print('Using dataset:')
-            cfg.dataset.print()
-            print()
-        else:
-            print('Error: Only one parameter (dataset_name) is supported.')
-            exit()
-    else:
-        print('Using default dataset:')
-        cfg.dataset.print()
-        print()
+    parse_args()
+    if args.dataset:
+        set_dataset(args.dataset)
+    cfg.dataset.print()
+    print()
     
-
-    dataset = COCODetection(image_path=cfg.dataset.train_images,
-                            info_file=cfg.dataset.train_info,
-                            transform=SSDAugmentation(),
-                            dataset_name=cfg.dataset.name,
-                            has_gt=cfg.dataset.has_gt)
-
+    if args.training:
+        dataset = COCODetection(image_path=cfg.dataset.train_images,
+                                info_file=cfg.dataset.train_info,
+                                transform=SSDAugmentation(),
+                                dataset_name=cfg.dataset.name)
+    else:
+        dataset = COCODetection(image_path=cfg.dataset.valid_images,
+                                info_file=cfg.dataset.valid_info,
+                                transform=BaseTransform(),
+                                dataset_name=cfg.dataset.name)
+    
     for i in range(len(dataset)):
         print('\n--------[%d/%d]--------' % (i + 1, len(dataset)))
+        img_id_i, file_name, img_raw, height, width = dataset.pull_image(i) # BGR
         
-        print('Original Data:')
-        img_id_i, file_name, img, height, width = dataset.pull_image(i) # BGR
-        img_id_a, masks, target, num_crowds = dataset.pull_anno(i, height, width)
-        
-        print(' image_id:', img_id_i, ' file_name:', file_name)
-        print(' img:', type(img), img.shape, ' h: %s w: %s' % (height, width), '\n', img)
-        print(' masks:', type(masks), masks.shape, '\n', masks)
-        
-        boxes = target[:, :4]
-        labels = target[:, 4]
-        
-        print(' boxes:', type(boxes), boxes.shape,'\n', boxes)
-        print(' labels:', type(labels), labels.shape,'\n', labels)
-        print(' num_crowds:', type(num_crowds), '\n', num_crowds)
-        
-        img_annotated = img.copy()
-        scale = [width, height, width, height]
+        if args.training:
+            img_tensor, (gt, masks, _) = dataset[i]
+            boxes, labels = gt[:, :4], gt[:, 4]
+            _, h, w = img_tensor.shape
+            img_array = img_tensor.cpu().numpy().astype(np.float32).transpose(1, 2, 0)
+            img_array = (img_array * STD) + MEANS
+            img_array = np.clip(img_array, a_min=0, a_max=255)
+            img_array = img_array.astype(np.uint8)[:, :, ::-1] # to BGR
+            img_array = img_array.copy()
+            scale = [w, h, w, h]
+        else:
+            img_tensor, (gt, masks, _) = dataset[i]
+            boxes, labels = gt[:, :4], gt[:, 4]
+            img_array = img_raw.copy()
+            scale = [width, height, width, height]
         
         for j in range(boxes.shape[0]):
             mask = torch.from_numpy(masks[j]).cuda().float()
@@ -111,44 +118,16 @@ if __name__ == '__main__':
                 classname = cfg.dataset.class_names[label]
             else:
                 classname = 'crowd'
-            
             color = create_random_color()
-            img_annotated = draw_annotation(img_annotated, mask, box, classname, color)
-        cv2.imshow('Original Data', img_annotated)
+            img_array = draw_annotation(img_array, mask, box, classname, color)
         
+        cv2.imshow('Raw Data', img_raw)
+        cv2.imshow('Processed Data', img_array)
         
+        print('index:', img_id_i)
+        print('shape:', img_raw.shape)
+        print('labels:\n', gt)
         print()
-        print('Augmented Data:')
-        img_aug, (gt_aug, masks_aug, num_crowds_aug) = dataset[i]
-        _, height_aug, width_aug = img_aug.shape
-        
-        print(' img_aug:', type(img_aug), img_aug.shape, ' h: %s w: %s' % (height_aug, width_aug), '\n', img_aug)
-        print(' masks_aug:', type(masks_aug), masks_aug.shape, '\n', masks_aug)
-        
-        boxes_aug = gt_aug[:, :4]
-        labels_aug = gt_aug[:, 4]
-        
-        print(' boxes_aug:', type(boxes_aug), boxes_aug.shape, '\n', boxes_aug)
-        print(' labels_aug:', type(labels_aug), labels_aug.shape,'\n', labels_aug)
-        print(' num_crowds_aug:', type(num_crowds_aug), '\n', num_crowds_aug)
-        
-        img_aug_numpy = img_aug.cpu().numpy().astype(np.float32).transpose((1, 2, 0))
-        img_aug_numpy = ((img_aug_numpy * STD) + MEANS).astype(np.uint8)[:, :, ::-1] # BGR
-        img_aug_annotated = img_aug_numpy.copy()
-        scale_aug = [width_aug, height_aug, width_aug, height_aug]
-        
-        for j in range(boxes_aug.shape[0]):
-            mask = torch.from_numpy(masks_aug[j]).cuda().float()
-            box = boxes_aug[j] * scale_aug
-            label = int(labels_aug[j])
-            if label >= 0:
-                classname = cfg.dataset.class_names[label]
-            else:
-                classname = 'crowd'
-            
-            color = create_random_color()
-            img_aug_annotated = draw_annotation(img_aug_annotated, mask, box, classname, color)
-        cv2.imshow('Augmented Data', img_aug_annotated)
         
         # press 'Esc' to shut down, and every key else to continue
         key = cv2.waitKey(0)
