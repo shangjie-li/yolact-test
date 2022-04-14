@@ -185,6 +185,21 @@ seumm_hq_dataset = dataset_base.copy({
     'label_map': None
 })
 
+seumm_dataset = dataset_base.copy({
+    'name': 'SEUMM',
+    
+    'train_images': './data/seumm/images/',
+    'train_info':   './data/seumm/annotations/instances_train.json',
+    
+    'valid_images': './data/seumm/images/',
+    'valid_info':   './data/seumm/annotations/instances_val.json',
+
+    'has_gt': True,
+    
+    'class_names': ('pedestrian', 'cyclist', 'car', 'bus', 'truck', 'traffic_light', 'traffic_sign'),
+    'label_map': None
+})
+
 
 # ----------------------- TRANSFORMS ----------------------- #
 

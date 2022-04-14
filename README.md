@@ -21,6 +21,11 @@ A test version of Yolact in PyTorch for instance segmentation
    python dataset_player.py --dataset=seumm_hq_dataset
    python dataset_player.py --dataset=seumm_hq_dataset --training
    ```
+ - Check SEUMM dataset
+   ```
+   python dataset_player.py --dataset=seumm_dataset
+   python dataset_player.py --dataset=seumm_dataset --training
+   ```
 
 ## Training
  - Train on COCO 2017 dataset
@@ -34,6 +39,10 @@ A test version of Yolact in PyTorch for instance segmentation
  - Train on SEUMM HQ dataset
    ```
    python train.py --config=yolact_resnet50_config --dataset=seumm_hq_dataset
+   ```
+ - Train on SEUMM dataset
+   ```
+   python train.py --config=yolact_resnet50_config --dataset=seumm_dataset
    ```
 
 ## Evaluation
@@ -51,6 +60,10 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
    # NotImplementError
    ```
+ - Evaluate on SEUMM dataset
+   ```
+   # NotImplementError
+   ```
  - The result should be
 
 | Backbone | Dataset  | Iter | val mAP@.5 B | val mAP@.5:.95 B | val mAP@.5 M | val mAP@.5:.95 M |
@@ -58,6 +71,7 @@ A test version of Yolact in PyTorch for instance segmentation
 | ResNet50 | COCO     | 380k | 46.56        | 27.35            | 42.75        | 25.78            |
 | ResNet50 | KITTI    | 60k  | 44.67        | 24.23            | 39.55        | 22.34            |
 | ResNet50 | SEUMM HQ | 60k  |              |                  |              |                  |
+| ResNet50 | SEUMM    | 60k  |              |                  |              |                  |
 
 ## Demo
  - Run a demo with COCO 2017 model
@@ -71,6 +85,10 @@ A test version of Yolact in PyTorch for instance segmentation
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --images=test_kitti:output_kitti --score_threshold=0.25 --top_k=20
    ```
  - Run a demo with SEUMM HQ model
+   ```
+   # NotImplementError
+   ```
+ - Run a demo with SEUMM model
    ```
    # NotImplementError
    ```

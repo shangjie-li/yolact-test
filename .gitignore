@@ -4,6 +4,7 @@ data/coco
 data/kitti
 data/seumm_dual
 data/seumm_hq
+data/seumm
 
 layers/__pycache__
 layers/functions/__pycache__
