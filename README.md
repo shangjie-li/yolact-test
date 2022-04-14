@@ -37,11 +37,12 @@ A test version of Yolact in PyTorch for instance segmentation
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --display
    ```
  - The result should be
+ 
 | Model           | Dataset | Iter | val mAP@.5(B) | val mAP@.5:.95(B) | val mAP@.5(M) | val mAP@.5:.95(M) |
 |:---------------:|:-------:|:----:|:-------------:|:-----------------:|:-------------:|:-----------------:|
 | yolact_resnet50 | COCO    | 380k | 46.56         | 27.35             | 42.75         | 25.78             |
 | yolact_resnet50 | KITTI   | 60k  | 44.67         | 24.23             | 39.55         | 22.34             |
-   
+
 ## Demo
  - Run on the image with COCO 2017 model
    ```
