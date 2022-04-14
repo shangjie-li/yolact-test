@@ -62,13 +62,13 @@ A test version of Yolact in PyTorch for instance segmentation
 ## Demo
  - Run a demo with COCO 2017 model
    ```
-   python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --image=my_image.jpeg --score_threshold=0.5 --top_k=20
-   python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --images=test_coco:test_out_coco --score_threshold=0.5 --top_k=20
+   python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=20
+   python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --images=test_coco:test_out_coco --score_threshold=0.25 --top_k=20
    ```
  - Run a demo with KITTI model
    ```
-   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --image=my_image.jpeg --score_threshold=0.5 --top_k=20
-   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --images=test_kitti:test_out_kitti --score_threshold=0.5 --top_k=20
+   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=20
+   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --images=test_kitti:test_out_kitti --score_threshold=0.25 --top_k=20
    ```
  - Run a demo with SEUMM HQ model
    ```
