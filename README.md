@@ -58,7 +58,8 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
  - Evaluate on SEUMM HQ dataset
    ```
-   # NotImplementError
+   python eval.py --dataset=seumm_hq_dataset --trained_model=weights/seumm_hq/yolact_resnet50_256_60000.pth
+   python eval.py --dataset=seumm_hq_dataset --trained_model=weights/seumm_hq/yolact_resnet50_256_60000.pth --display
    ```
  - Evaluate on SEUMM dataset
    ```
@@ -70,23 +71,24 @@ A test version of Yolact in PyTorch for instance segmentation
 |:--------:|:--------:|:----:|:------------:|:----------------:|:------------:|:----------------:|
 | ResNet50 | COCO     | 380k | 46.56        | 27.35            | 42.75        | 25.78            |
 | ResNet50 | KITTI    | 60k  | 44.67        | 24.23            | 39.55        | 22.34            |
-| ResNet50 | SEUMM HQ | 60k  |              |                  |              |                  |
+| ResNet50 | SEUMM HQ | 60k  | 86.66        | 49.05            | 78.74        | 42.26            |
 | ResNet50 | SEUMM    | 60k  |              |                  |              |                  |
 
 ## Demo
  - Run a demo with COCO 2017 model
    ```
    python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=20
-   python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --images=test_coco:output_coco --score_threshold=0.25 --top_k=20
+   python eval.py --trained_model=weights/coco/yolact_resnet50_25_380000.pth --images=test_images:outputs --score_threshold=0.25 --top_k=20
    ```
  - Run a demo with KITTI model
    ```
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=20
-   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --images=test_kitti:output_kitti --score_threshold=0.25 --top_k=20
+   python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --images=test_images:outputs --score_threshold=0.25 --top_k=20
    ```
  - Run a demo with SEUMM HQ model
    ```
-   # NotImplementError
+   python eval.py --dataset=seumm_hq_dataset --trained_model=weights/seumm_hq/yolact_resnet50_256_60000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=20
+   python eval.py --dataset=seumm_hq_dataset --trained_model=weights/seumm_hq/yolact_resnet50_256_60000.pth --images=test_images:outputs --score_threshold=0.25 --top_k=20
    ```
  - Run a demo with SEUMM model
    ```
