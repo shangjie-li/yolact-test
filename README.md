@@ -63,7 +63,8 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
  - Evaluate on SEUMM dataset
    ```
-   # NotImplementError
+   python eval.py --dataset=seumm_dataset --trained_model=weights/seumm/yolact_resnet50_72_60000.pth
+   python eval.py --dataset=seumm_dataset --trained_model=weights/seumm/yolact_resnet50_72_60000.pth --display
    ```
  - The result should be
 
@@ -72,7 +73,7 @@ A test version of Yolact in PyTorch for instance segmentation
 | ResNet50 | COCO     | 380k | 46.56        | 27.35            | 42.75        | 25.78            |
 | ResNet50 | KITTI    | 60k  | 44.67        | 24.23            | 39.55        | 22.34            |
 | ResNet50 | SEUMM HQ | 60k  | 86.66        | 49.05            | 78.74        | 42.26            |
-| ResNet50 | SEUMM    | 60k  |              |                  |              |                  |
+| ResNet50 | SEUMM    | 60k  | 72.67        | 40.76            | 64.98        | 37.37            |
 
 ## Demo
  - Run a demo with COCO 2017 model
@@ -92,7 +93,7 @@ A test version of Yolact in PyTorch for instance segmentation
    ```
  - Run a demo with SEUMM model
    ```
-   # NotImplementError
+   python eval.py --dataset=seumm_dataset --trained_model=weights/seumm/yolact_resnet50_72_60000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=20
+   python eval.py --dataset=seumm_dataset --trained_model=weights/seumm/yolact_resnet50_72_60000.pth --images=test_images:outputs --score_threshold=0.25 --top_k=20
    ```
-   
 
