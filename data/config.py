@@ -170,14 +170,14 @@ kitti_dataset = dataset_base.copy({
     'label_map': None
 })
 
-seumm_hq_dataset = dataset_base.copy({
-    'name': 'SEUMM HQ',
+seumm_hq_lwir_dataset = dataset_base.copy({
+    'name': 'SEUMM HQ LWIR',
     
-    'train_images': './data/seumm_hq/images/',
-    'train_info':   './data/seumm_hq/annotations/instances_train.json',
+    'train_images': './data/seumm_hq_lwir/images/',
+    'train_info':   './data/seumm_hq_lwir/annotations/instances_train.json',
     
-    'valid_images': './data/seumm_hq/images/',
-    'valid_info':   './data/seumm_hq/annotations/instances_val.json',
+    'valid_images': './data/seumm_hq_lwir/images/',
+    'valid_info':   './data/seumm_hq_lwir/annotations/instances_val.json',
 
     'has_gt': True,
     
@@ -185,14 +185,14 @@ seumm_hq_dataset = dataset_base.copy({
     'label_map': None
 })
 
-seumm_dataset = dataset_base.copy({
-    'name': 'SEUMM',
+seumm_lwir_dataset = dataset_base.copy({
+    'name': 'SEUMM LWIR',
     
-    'train_images': './data/seumm/images/',
-    'train_info':   './data/seumm/annotations/instances_train.json',
+    'train_images': './data/seumm_lwir/images/',
+    'train_info':   './data/seumm_lwir/annotations/instances_train.json',
     
-    'valid_images': './data/seumm/images/',
-    'valid_info':   './data/seumm/annotations/instances_val.json',
+    'valid_images': './data/seumm_lwir/images/',
+    'valid_info':   './data/seumm_lwir/annotations/instances_val.json',
 
     'has_gt': True,
     

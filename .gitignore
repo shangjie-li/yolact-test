@@ -3,8 +3,8 @@ data/__pycache__
 data/coco
 data/kitti
 data/seumm_dual
-data/seumm_hq
-data/seumm
+data/seumm_hq_lwir
+data/seumm_lwir
 
 layers/__pycache__
 layers/functions/__pycache__
