@@ -200,6 +200,21 @@ seumm_lwir_dataset = dataset_base.copy({
     'label_map': None
 })
 
+seumm_lwir_15200_dataset = dataset_base.copy({
+    'name': 'SEUMM LWIR 15200',
+    
+    'train_images': './data/seumm_lwir_15200/images/',
+    'train_info':   './data/seumm_lwir_15200/annotations/instances_train.json',
+    
+    'valid_images': './data/seumm_lwir_15200/images/',
+    'valid_info':   './data/seumm_lwir_15200/annotations/instances_val.json',
+
+    'has_gt': True,
+    
+    'class_names': ('pedestrian', 'cyclist', 'car', 'bus', 'truck', 'traffic_light', 'traffic_sign'),
+    'label_map': None
+})
+
 
 # ----------------------- TRANSFORMS ----------------------- #
 

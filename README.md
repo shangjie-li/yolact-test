@@ -56,15 +56,15 @@ A test version of Yolact in PyTorch for instance segmentation
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth
    python eval.py --dataset=kitti_dataset --trained_model=weights/kitti/yolact_resnet50_107_60000.pth --display
    ```
- - Evaluate on SEUMM HQ dataset
+ - Evaluate on SEUMM HQ LWIR dataset
    ```
-   python eval.py --dataset=seumm_hq_dataset --trained_model=weights/seumm_hq/yolact_resnet50_256_60000.pth
-   python eval.py --dataset=seumm_hq_dataset --trained_model=weights/seumm_hq/yolact_resnet50_256_60000.pth --display
+   python eval.py --dataset=seumm_hq_lwir_dataset --trained_model=weights/seumm_hq_lwir/yolact_resnet50_256_60000.pth
+   python eval.py --dataset=seumm_hq_lwir_dataset --trained_model=weights/seumm_hq_lwir/yolact_resnet50_256_60000.pth --display
    ```
- - Evaluate on SEUMM dataset
+ - Evaluate on SEUMM LWIR dataset
    ```
-   python eval.py --dataset=seumm_dataset --trained_model=weights/seumm/yolact_resnet50_72_60000.pth
-   python eval.py --dataset=seumm_dataset --trained_model=weights/seumm/yolact_resnet50_72_60000.pth --display
+   python eval.py --dataset=seumm_lwir_dataset --trained_model=weights/seumm_lwir/yolact_resnet50_72_60000.pth
+   python eval.py --dataset=seumm_lwir_dataset --trained_model=weights/seumm_lwir/yolact_resnet50_72_60000.pth --display
    ```
  - The result should be
 

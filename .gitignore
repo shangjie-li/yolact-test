@@ -6,6 +6,7 @@ data/kitti
 data/seumm_dual
 data/seumm_hq_lwir
 data/seumm_lwir
+data/seumm_lwir_15200
 
 layers/__pycache__
 layers/functions/__pycache__
