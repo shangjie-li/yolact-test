@@ -186,7 +186,7 @@ class YolactDetector():
     def run(self, img, score_threshold=0.3, top_k=20, class_filter=None):
         """
         Args:
-            img: (h, w, 3), BGR format
+            img: (h, w, 3), RGB format
             score_threshold: float, object confidence threshold
             top_k: int, number of objects for detection
             class_filter: list(int), filter by class, for instance [0, 2, 3]
