@@ -26,6 +26,11 @@ A test version of Yolact in PyTorch for instance segmentation
    python dataset_player.py --dataset=seumm_lwir_dataset
    python dataset_player.py --dataset=seumm_lwir_dataset --training
    ```
+ - Check LAJI 4692 dataset
+   ```
+   python dataset_player.py --dataset=laji_4692_dataset
+   python dataset_player.py --dataset=laji_4692_dataset --training
+   ```
 
 ## Training
  - Train on COCO 2017 dataset
@@ -43,6 +48,10 @@ A test version of Yolact in PyTorch for instance segmentation
  - Train on SEUMM LWIR dataset
    ```
    python train.py --config=yolact_resnet50_config --dataset=seumm_lwir_dataset
+   ```
+ - Train on LAJI 4692 dataset
+   ```
+   python train.py --config=yolact_resnet50_config --dataset=laji_4692_dataset --batch_size=4 --lr=0.0005
    ```
 
 ## Evaluation
@@ -66,6 +75,11 @@ A test version of Yolact in PyTorch for instance segmentation
    python eval.py --dataset=seumm_lwir_dataset --trained_model=weights/seumm_lwir/yolact_resnet50_72_60000.pth
    python eval.py --dataset=seumm_lwir_dataset --trained_model=weights/seumm_lwir/yolact_resnet50_72_60000.pth --display
    ```
+ - Evaluate on LAJI 4692 dataset
+   ```
+   python eval.py --dataset=laji_4692_dataset --trained_model=weights/laji_4692/yolact_resnet50_205_160000.pth
+   python eval.py --dataset=laji_4692_dataset --trained_model=weights/laji_4692/yolact_resnet50_205_160000.pth --display --top_k=50
+   ```
  - The result should be
 
 | Backbone | Dataset    | Iter | val mAP@.5B | val mAP@.5:.95B | val mAP@.5M | val mAP@.5:.95M |
@@ -74,6 +88,7 @@ A test version of Yolact in PyTorch for instance segmentation
 | ResNet50 | KITTI      | 60k  | 44.67       | 24.23           | 39.55       | 22.34           |
 | ResNet50 | SEUMM-HQ-L | 60k  | 86.66       | 49.05           | 78.74       | 42.26           |
 | ResNet50 | SEUMM-L    | 60k  | 72.67       | 40.76           | 64.98       | 37.37           |
+| ResNet50 | LAJI-4692  | 80k  | 46.08       | 21.78           | 36.21       | 16.04           |
 
 ## Demo
  - Run a demo with COCO 2017 model
@@ -96,4 +111,8 @@ A test version of Yolact in PyTorch for instance segmentation
    python eval.py --dataset=seumm_lwir_dataset --trained_model=weights/seumm_lwir/yolact_resnet50_72_60000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=20
    python eval.py --dataset=seumm_lwir_dataset --trained_model=weights/seumm_lwir/yolact_resnet50_72_60000.pth --images=test_images:outputs --score_threshold=0.25 --top_k=20
    ```
-
+ - Run a demo with LAJI 4692 model
+   ```
+   python eval.py --dataset=laji_4692_dataset --trained_model=weights/laji_4692/yolact_resnet50_205_160000.pth --image=my_image.jpeg --score_threshold=0.25 --top_k=50
+   python eval.py --dataset=laji_4692_dataset --trained_model=weights/laji_4692/yolact_resnet50_205_160000.pth --images=test_images:outputs --score_threshold=0.25 --top_k=50
+   ```

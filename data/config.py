@@ -215,6 +215,21 @@ seumm_lwir_15200_dataset = dataset_base.copy({
     'label_map': None
 })
 
+laji_4692_dataset = dataset_base.copy({
+    'name': 'LAJI 4692',
+    
+    'train_images': './data/laji_4692/images/',
+    'train_info':   './data/laji_4692/annotations/instances_train.json',
+    
+    'valid_images': './data/laji_4692/images/',
+    'valid_info':   './data/laji_4692/annotations/instances_val.json',
+
+    'has_gt': True,
+    
+    'class_names': ('ads', 'branch', 'cigarette_butt', 'firecracker', 'flower', 'glass_bottle', 'grass', 'leaves', 'metal_bottle', 'paper_box', 'paper_scraps', 'peel', 'person', 'plastic_bag', 'plastic_bottle', 'road_hole', 'shrub', 'solid_clod', 'solid_crumb', 'water_stain'),
+    'label_map': None
+})
+
 
 # ----------------------- TRANSFORMS ----------------------- #
 
@@ -639,8 +654,9 @@ yolact_base_config = coco_base_config.copy({
     'max_size': 550,
     
     # Training params
-    'lr_steps': (280000, 600000, 700000, 750000),
-    'max_iter': 800000,
+    # This will be recalculated if batch_size is not 8 (see 'cfg.max_iter //= factor' in train.py)
+    'lr_steps': (28000, 60000, 70000, 75000),
+    'max_iter': 80000,
     
     # Backbone Settings
     'backbone': resnet101_backbone.copy({
