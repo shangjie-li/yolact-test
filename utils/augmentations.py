@@ -414,7 +414,12 @@ class Expand(object):
             return image, masks, boxes, labels
 
         height, width, depth = image.shape
-        ratio = random.uniform(1, 4)
+
+        # skip this process if the image size is too large
+        if height > 1080 or width > 1920:
+            return image, masks, boxes, labels
+
+        ratio = random.uniform(1, 2)
         left = random.uniform(0, width*ratio - width)
         top = random.uniform(0, height*ratio - height)
 
